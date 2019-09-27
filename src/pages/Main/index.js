@@ -1,24 +1,62 @@
-import React from 'react';
+import React, { Component } from 'react';
+import { Keyboard } from 'react-native';
+
 import '../../config/ReactotronConfig';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import api from '../../service/api';
 import { Container, Form, Input, SubmitButton } from './style';
 
-const Main = () => {
-  return (
-    <Container>
-      <Form>
-        <Input
-          autoCorrect={false}
-          autoCapitalize="none"
-          placeholder="Adicionar User"
-        />
-        <SubmitButton>
-          <Icon name="add" size={20} color="#fff" />
-        </SubmitButton>
-      </Form>
-    </Container>
-  );
-};
+class Main extends Component {
+  state = {
+    newUser: '',
+    users: [],
+  };
+
+  handleAddUser = async () => {
+    const { users, newUser } = this.state;
+
+    const response = await api.get(`/users/${newUser}`);
+    const data = {
+      name: response.data.name,
+      login: response.data.login,
+      bio: response.data.bio,
+      avatar: response.data.avatar_url,
+    };
+    this.setState({
+      users: [...users, data],
+      newUser: '',
+    });
+
+    Keyboard.dismiss();
+  };
+
+  render() {
+    const { users, newUser } = this.state;
+    return (
+      <Container>
+        <Form>
+          <Input
+            autoCorrect={false}
+            autoCapitalize="none"
+            placeholder="Adicionar User"
+            value={newUser}
+            onChangeText={text => this.setState({ newUser: text })}
+            returnKeyLabel="send"
+            onSubmitEditing={this.handleAddUser}
+          />
+          <SubmitButton>
+            <Icon
+              name="add"
+              size={20}
+              color="#fff"
+              onPress={this.handleAddUser}
+            />
+          </SubmitButton>
+        </Form>
+      </Container>
+    );
+  }
+}
 
 Main.navigationOptions = {
   title: 'Usuários',
