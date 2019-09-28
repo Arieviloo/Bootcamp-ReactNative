@@ -4,7 +4,19 @@ import { Keyboard } from 'react-native';
 import '../../config/ReactotronConfig';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import api from '../../service/api';
-import { Container, Form, Input, SubmitButton } from './style';
+import {
+  Container,
+  Form,
+  Input,
+  SubmitButton,
+  List,
+  User,
+  Avatar,
+  Name,
+  Bio,
+  ProfileButton,
+  ProfileButtonText,
+} from './style';
 
 class Main extends Component {
   state = {
@@ -53,6 +65,22 @@ class Main extends Component {
             />
           </SubmitButton>
         </Form>
+
+        <List
+          data={users}
+          keyExtractor={user => user.login}
+          renderItem={({ item }) => (
+            <User>
+              <Avatar source={{ uri: item.avatar }} />
+              <Name>{item.name}</Name>
+              <Bio>{item.bio}</Bio>
+
+              <ProfileButton>
+                <ProfileButtonText>Ver perfil</ProfileButtonText>
+              </ProfileButton>
+            </User>
+          )}
+        />
       </Container>
     );
   }
