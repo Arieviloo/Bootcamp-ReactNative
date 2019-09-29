@@ -3,6 +3,7 @@ import { Keyboard } from 'react-native';
 
 import '../../config/ReactotronConfig';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import { throwStatement } from '@babel/types';
 import api from '../../service/api';
 import {
   Container,
@@ -75,7 +76,7 @@ class Main extends Component {
               <Name>{item.name}</Name>
               <Bio>{item.bio}</Bio>
 
-              <ProfileButton>
+              <ProfileButton onPress={this.handleAddUser}>
                 <ProfileButtonText>Ver perfil</ProfileButtonText>
               </ProfileButton>
             </User>
