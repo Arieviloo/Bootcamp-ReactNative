@@ -3,7 +3,6 @@ import { Keyboard } from 'react-native';
 
 import '../../config/ReactotronConfig';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import { throwStatement } from '@babel/types';
 import api from '../../service/api';
 import {
   Container,
