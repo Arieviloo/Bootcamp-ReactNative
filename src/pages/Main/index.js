@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { Keyboard, ActivityIndicator } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 
@@ -20,6 +21,19 @@ import {
 } from './style';
 
 class Main extends Component {
+  static navigationOptions = {
+    title: 'Usuários',
+  };
+
+  // eslint-disable-next-line react/static-property-placement
+  static propTypes = {
+    // eslint-disable-next-line react/require-default-props
+    navigation: PropTypes.shape({
+      navigate: PropTypes.func,
+      // eslint-disable-next-line react/no-typos
+    }).inRequired,
+  };
+
   state = {
     newUser: '',
     users: [],
@@ -56,6 +70,11 @@ class Main extends Component {
     });
 
     Keyboard.dismiss();
+  };
+
+  handleNavigate = user => {
+    const { navigation } = this.props;
+    navigation.navigate('User', { user });
   };
 
   render() {
@@ -95,8 +114,10 @@ class Main extends Component {
               <Name>{item.name}</Name>
               <Bio>{item.bio}</Bio>
 
-              <ProfileButton onPress={this.handleAddUser}>
-                <ProfileButtonText>Ver perfil</ProfileButtonText>
+              <ProfileButton>
+                <ProfileButtonText onPress={() => this.handleNavigate(item)}>
+                  Ver perfil
+                </ProfileButtonText>
               </ProfileButton>
             </User>
           )}
@@ -105,9 +126,4 @@ class Main extends Component {
     );
   }
 }
-
-Main.navigationOptions = {
-  title: 'Usuários',
-};
-
 export default Main;
