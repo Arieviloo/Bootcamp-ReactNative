@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Keyboard } from 'react-native';
+import { Keyboard, ActivityIndicator } from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
 
 import '../../config/ReactotronConfig';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -22,10 +23,24 @@ class Main extends Component {
   state = {
     newUser: '',
     users: [],
+    loading: false,
   };
+
+  async componentDidMount() {
+    const users = await AsyncStorage.getItem('users');
+    if (users) this.setState({ users: JSON.parse(users) });
+  }
+
+  componentDidUpdate(_, prevState) {
+    const { users } = this.state;
+    if (prevState.users !== users) {
+      AsyncStorage.setItem('users', JSON.stringify(users));
+    }
+  }
 
   handleAddUser = async () => {
     const { users, newUser } = this.state;
+    this.setState({ loading: true });
 
     const response = await api.get(`/users/${newUser}`);
     const data = {
@@ -37,13 +52,14 @@ class Main extends Component {
     this.setState({
       users: [...users, data],
       newUser: '',
+      loading: false,
     });
 
     Keyboard.dismiss();
   };
 
   render() {
-    const { users, newUser } = this.state;
+    const { users, newUser, loading } = this.state;
     return (
       <Container>
         <Form>
@@ -56,13 +72,17 @@ class Main extends Component {
             returnKeyLabel="send"
             onSubmitEditing={this.handleAddUser}
           />
-          <SubmitButton>
-            <Icon
-              name="add"
-              size={20}
-              color="#fff"
-              onPress={this.handleAddUser}
-            />
+          <SubmitButton loading={loading}>
+            {loading ? (
+              <ActivityIndicator color="#fff " />
+            ) : (
+              <Icon
+                name="add"
+                size={20}
+                color="#fff"
+                onPress={this.handleAddUser}
+              />
+            )}
           </SubmitButton>
         </Form>
 
