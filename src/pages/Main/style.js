@@ -67,10 +67,12 @@ export const ProfileButton = styled(RectButton)`
   justify-content: center;
   align-items: center;
   height: 16px;
+  padding: 20px;
 `;
 export const ProfileButtonText = styled.Text`
   font-size: 14px;
   font-weight: bold;
   color: #fff;
   text-transform: uppercase;
+  padding: 30px;
 `;
